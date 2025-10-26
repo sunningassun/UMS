@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户登录</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <style>
+        /* 保持原有样式不变 */
+        .account {
+            width: 400px;
+            border: 1px solid #dddddd;
+            border-radius: 5px;
+            box-shadow: 5px 5px 20px #aaa;
+            margin: 100px auto 0;
+            padding: 20px 40px;
+        }
+
+        .account h2 {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            height: calc(1.5em + .75rem + 2px);
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: .25rem;
+            transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .remember-me input {
+            margin-right: 8px;
+            margin-top: 2px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: .25rem;
+            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+            border-color: #0062cc;
+        }
+
+        .btn-secondary {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        .register-a-link {
+            color: #007bff;
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        .register-a-link:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .right-align {
+            text-align: right;
+            display: block;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+<div class="account">
+    <h2>用户登录</h2>
+    <form method="post" novalidate id="loginForm">
+        {% csrf_token %}  <!-- 移到form标签内，这会自动生成正确的CSRF令牌 -->
+
+        <div class="form-group">
+            <label for="id_name">用户名</label>
+            <input type="text" name="name" class="form-control" id="id_name" required>
+            <span style="color:red;"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">密码</label>
+            <input type="password" name="password" class="form-control" id="id_password" required>
+            <span style="color:red;"></span>
+        </div>
+
+        <!-- 记住密码选项 -->
+        <div class="remember-me">
+            <input type="checkbox" name="remember" id="id_remember">
+            <label for="id_remember">记住密码</label>
+        </div>
+
+        <!-- 错误提示 -->
+        <div class="error-message" style="display:none;"></div>
+
+        <!-- 登录和重置按钮组 -->
+        <div class="btn-group">
+            <input type="submit" value="登 录" class="btn btn-primary">{{ error_msg }}
+            <input type="reset" value="重 置" class="btn btn-secondary">
+        </div>
+
+        <a href="/register/" class="register-a-link right-align">免费注册</a>
+    </form>
+</div>
+
+<script>
+    // 保持原有脚本不变
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        const username = document.getElementById('id_name').value;
+        const password = document.getElementById('id_password').value;
+        const errorElement = document.querySelector('.error-message');
+
+        if (!username || !password) {
+            e.preventDefault();
+            errorElement.textContent = '请输入用户名和密码';
+            errorElement.style.display = 'block';
+        } else {
+            errorElement.style.display = 'none';
+        }
+    });
+
+    document.querySelector('input[type="reset"]').addEventListener('click', function() {
+        document.querySelector('.error-message').style.display = 'none';
+    });
+</script>
+</body>
+</html>

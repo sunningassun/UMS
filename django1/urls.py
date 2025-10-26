@@ -1,5 +1,5 @@
 """
-URL configuration for project2 project.
+URL configuration for django1 project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -14,16 +14,28 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
 from django.contrib import admin
 from django.urls import path
 from app01 import views
 
 urlpatterns = [
-    # path("admin/", admin.site.urls),
-    path('open/',views.open),
-    path('add/',views.add),
-    path('delete/',views.delete),
-    path('change/',views.change),
-    path('check/',views.check),
+    path('admin/', admin.site.urls),
+    path('index/',views.index,name='index'),
+    path('news/',views.news,name="news"),
+    path('user/',views.user,name="user"),
+    path('login/',views.login,name="login"),
+    path('orm/',views.orm,name="orm"),
+
+
+    # 注册页面
+    path('register/', views.register, name='register'),
+    # 用户名唯一性检查（AJAX）
+    path('check-username/', views.check_username, name='check_username'),
+    # 注册成功页
+    path('success/', views.register_success, name='register_success'),
+
+    path('add/',views.add,name='add'),
+    path('delete/',views.delete,name='delete'),
+    path('list/',views.list,name='list')
 ]
+
