@@ -1,36 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<a href="/add">添加用户</a>
-<h1>User列表</h1>
+{% extends 'layout.html' %}
 
-<table border="1">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>姓名</th>
-        <th>密码</th>
-        <th>年龄</th>
-        <th>操作</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for obj in user_list %}
-        <tr>
-            <td>{{ obj.id }}</td>
-            <td>{{ obj.name }}</td>
-            <td>{{ obj.password }}</td>
-            <td>{{ obj.age }}</td>
-            <td><a href="/delete/?nid={{ obj.id }}">删除</a></td>
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+{% block content %}
+    <div class="container">
+        <div style="margin-bottom: 10px">
+            <a class="btn btn-success" href="/user/add/">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                新建用户
+            </a>
+            <a class="btn btn-success" href="/user/modelform/add/">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                新建用户ModelForm
+            </a>
+        </div>
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading">
+                <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                用户列表
+            </div>
 
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>密码</th>
+                    <th>年龄</th>
+                    <th>余额</th>
+                    <th>入职时间</th>
+                    <th>性别</th>
+                    <th>所属部门</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for obj in user_list %}
+                    <tr>
+                        <th>{{obj.id}}</th>
+                        <td>{{obj.name}}</td>
+                        <td>{{obj.password}}</td>
+                        <td>{{obj.age}}</td>
+                        <td>{{obj.account}}</td>
+                        <td>{{obj.create_time|date:'Y-m-d'}}</td>
+                        <td>{{obj.gender}}</td>
+                        <td>{{obj.depart.title}}</td>
+                        <td>
+                            <a class="btn btn-primary btn-xs" href="#">编辑</a>
+                            <a class="btn btn-danger btn-xs" href="#">删除</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
 
-</body>
-</html>

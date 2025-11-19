@@ -27,15 +27,18 @@ urlpatterns = [
     path('orm/',views.orm,name="orm"),
 
 
-    # 注册页面
-    path('register/', views.register, name='register'),
-    # 用户名唯一性检查（AJAX）
-    path('check-username/', views.check_username, name='check_username'),
-    # 注册成功页
-    path('success/', views.register_success, name='register_success'),
-
     path('add/',views.add,name='add'),
     path('delete/',views.delete,name='delete'),
-    path('list/',views.list,name='list')
+    path('list/',views.list,name='list'),
+
+    path('layout/',views.layout,name='layout'),
+    path('depart/list/',views.depart_list,name='depart_list'),
+    path('depart/add/',views.depart_add,name='depart_add'),
+    path('depart/del/',views.depart_del,name='depart_del'),
+    path('depart/<int:nid>/edit/',views.depart_edit,name='depart_edit'),
+    path('user/list/',views.user_list,name='user_list'),
+    path('user/add/',views.user_add,name='user_add'),
+    path('user/modelform/add/',views.user_modelform_add,name='user_modelform_add'),
+    # path('user/<int:nid>/>edit/',views.edit,name='user_edit'),
 ]
 

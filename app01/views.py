@@ -1,7 +1,8 @@
+from django import forms
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from app01.models import User
-from app01.models import UserInfo
+from app01.models import UserInfo,Department
+
 
 
 # Create your views here.
@@ -57,62 +58,73 @@ def delete(request):
     UserInfo.objects.filter(id=nid).delete()
     return redirect('/list/')
 
+def layout(request):
+    return render(request,'layout.html')
 
+def depart_list(request):
+    depart_list=Department.objects.all()
+    return render(request,'depart_list.html',{'depart_list':depart_list})
 
+def depart_add(request):
+    if request.method=='GET':
+        return render(request,'depart_add.html')
+    title=request.POST.get('title')
+    Department.objects.create(title=title)
+    return redirect('/depart/list')
 
+def depart_del(request):
+    nid=request.GET.get('nid')
+    Department.objects.filter(id=nid).delete()
+    return redirect('/depart/list')
 
+def depart_edit(request,nid):
+    if request.method=='GET':
+        depart=Department.objects.filter(id=nid).first()
+        return render(request,'depart_edit.html',{'depart':depart})
+    title=request.POST.get('title')
+    Department.objects.filter(id=nid).update(title=title)
+    return redirect('/depart/list')
 
+def user_list(request):
+    user_list=UserInfo.objects.all()
+    return render(request,'user_list.html',{'user_list':user_list})
 
+def user_add(request):
+    if request.method=='GET':
+        context={
+            'gender_choices':UserInfo.gender_choice,
+            'depart_list':Department.objects.all()
+        }
+        return render(request,'user_add.html',context)
 
+class MyForm(forms.ModelForm):
+    class Meta:
+        model = UserInfo
+        fields='__all__'
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        for name,field in self.fields.items():
+            field.widget.attrs={'class':'form-control'}
+    def clean_password(self,*args,**kwargs):
+        password=self.cleaned_data.get('password')
+        if len(password)<8:
+            raise forms.ValidationError('密码长度必须大于8')
+        return password
 
+def user_modelform_add(request):
+    if request.method == "GET":
+        form = MyForm()
+        return render(request, 'user_modelform_add.html',{"form":form})
+    form=MyForm(request.POST)
+    if form.is_valid():
+        form.save()
+        return redirect('/user/list')
+    return render(request,'user_modelform_add.html',{"form":form})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import make_password
-from django.http import JsonResponse
-from app01.utils.form import UserForm
-from app01.models import User
-
-
-def register(request):
-    if request.method == 'POST':
-        # 处理表单提交
-        form = UserForm(request.POST, request.FILES)
-        if form.is_valid():
-            # 密码加密存储
-            user = form.save(commit=False)
-            user.upass = make_password(form.cleaned_data['upass'])
-            user.save()
-            # 注册成功，跳转至成功页面或登录页
-            return redirect('register_success')
-    else:
-        # 初始化表单
-        form = UserForm()
-
-    return render(request, 'register.html', {'form': form})
-
-
-def check_username(request):
-    """AJAX 异步检查用户名是否已存在"""
-    uname = request.GET.get('uname', '')
-    exists = User.objects.filter(uname=uname).exists()
-    # 返回 JSON 响应
-    return JsonResponse({'exists': exists})
-
-
-def register_success(request):
-    """注册成功提示页"""
-    return render(request, 'success.html')
+# def user_edit(request,nid):
+#     if request.method=='GET':
+#         depart=UserInfo.objects.filter(id=nid).first()
+#         return render(request,'user_edit.html',{'depart':depart})
+#     title=request.POST.get('title')
+#     Department.objects.filter(id=nid).update(title=title)
+#     return redirect('/depart/list')
